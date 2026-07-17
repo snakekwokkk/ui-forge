@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "retrieval_policy": {
+    "mode": "registry-plus-on-demand",
+    "bulk_download": false,
+    "full_repository_scan": false
+  },
+  "target": {
+    "platform": "mobile",
+    "stack": "unspecified",
+    "product_type": ""
+  },
+  "icon_library": {
+    "primary": "Iconoir",
+    "secondary": [],
+    "selection_reason": "",
+    "official_url": "https://iconoir.com/"
+  },
+  "component_library": {
+    "primary": "Ant Design Mobile",
+    "secondary": [],
+    "selection_reason": "",
+    "official_url": "https://mobile.ant.design/",
+    "code_installation_required": false
+  },
+  "components": [
+    {
+      "semantic_role": "date-range-picker",
+      "library": "Ant Design Mobile",
+      "component_name": "DatePicker",
+      "docs_url": "https://mobile.ant.design/components/date-picker/",
+      "consulted_states": ["default", "disabled", "error"],
+      "brand_token_mapping": {
+        "color": "semantic/action/primary",
+        "radius": "radius/control",
+        "spacing": "space/control"
+      },
+      "figma_component_name": "Form / Date Range Picker"
+    }
+  ],
+  "chart_library": {
+    "primary": "none",
+    "selection_reason": "No charts required",
+    "official_url": ""
+  },
+  "charts": []
+}

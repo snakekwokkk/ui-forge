@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "option": "A",
+  "screen_id": "home",
+  "canvas": {
+    "width": 390,
+    "height": 844,
+    "background": "#F8F7FA"
+  },
+  "layers": [
+    {
+      "id": "home-background",
+      "name": "Home / Background",
+      "type": "rectangle",
+      "z_index": 0,
+      "bounds": {"x": 0, "y": 0, "width": 390, "height": 844},
+      "rotation": 0,
+      "opacity": 1,
+      "style": {"fill": "#F8F7FA", "corner_radius": 0}
+    },
+    {
+      "id": "hero-title",
+      "name": "Home / Hero / Title",
+      "type": "text",
+      "z_index": 10,
+      "bounds": {"x": 24, "y": 72, "width": 342, "height": 48},
+      "rotation": 0,
+      "opacity": 1,
+      "text": {
+        "content": "Title",
+        "font_family": "Arial",
+        "font_style": "Bold",
+        "font_path": "",
+        "font_size": 32,
+        "line_height": 38,
+        "align": "left",
+        "color": "#17151E"
+      }
+    },
+    {
+      "id": "hero-asset",
+      "name": "Home / Hero / Asset / 3D",
+      "type": "raster",
+      "z_index": 20,
+      "bounds": {"x": 190, "y": 180, "width": 160, "height": 160},
+      "rotation": 0,
+      "opacity": 1,
+      "raster": {
+        "asset_id": "asset-hero-01",
+        "path": "assets/isolated/hero-01.png",
+        "fit": "contain",
+        "crop": null
+      }
+    },
+    {
+      "id": "tab-home-icon",
+      "name": "Home / Bottom Navigation / Home / Icon",
+      "type": "icon",
+      "z_index": 30,
+      "bounds": {"x": 32, "y": 780, "width": 24, "height": 24},
+      "rotation": 0,
+      "opacity": 1,
+      "icon": {
+        "icon_id": "tab-home-outline",
+        "svg_path": "assets/icons/iconpark/tab-home-outline.svg",
+        "preview_path": "assets/icons/iconpark/tab-home-outline.png",
+        "fit": "contain"
+      }
+    }
+  ]
+}

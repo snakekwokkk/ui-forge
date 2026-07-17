@@ -1,0 +1,36 @@
+{
+  "status": "planning",
+  "minimum_candidate_assets": 12,
+  "target_candidate_range": [12, 18],
+  "assets": [
+    {
+      "id": "",
+      "type": "figma_native",
+      "source": "",
+      "source_role": "",
+      "usage": "unconfirmed",
+      "permission_basis": "",
+      "ownership": "",
+      "style_profile_id": "material-style-primary",
+      "material_modality": "photography",
+      "style_match": {
+        "status": "planned",
+        "evidence": ""
+      },
+      "bounds": {},
+      "alpha": false,
+      "destinations": [],
+      "candidate_role": "used_or_optional",
+      "layer_spec": {
+        "crop": {},
+        "position": {},
+        "scale": 1,
+        "rotation": 0,
+        "opacity": 1,
+        "z_index": 0
+      },
+      "status": "planned",
+      "notes": ""
+    }
+  ]
+}

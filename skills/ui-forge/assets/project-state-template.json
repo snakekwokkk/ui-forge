@@ -1,0 +1,24 @@
+{
+  "status": "collecting_all_inputs",
+  "inputs": [],
+  "brand_dna": {},
+  "wireframe_analysis": {},
+  "options": {
+    "a": null,
+    "b": null,
+    "c": null
+  },
+  "primary_selected_option": null,
+  "primary_selection_confirmed": false,
+  "additional_option_queue": [],
+  "figma_target": null,
+  "asset_manifest": [],
+  "candidate_asset_minimum": 12,
+  "candidate_asset_target_range": [12, 18],
+  "delivery_gates": {
+    "asset_library": "pending",
+    "auto_layout": "pending",
+    "brand_dna_variables": "pending"
+  },
+  "qa": []
+}

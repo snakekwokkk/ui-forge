@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "family_policy": "single-library-per-screen-set",
+  "icons": [
+    {
+      "icon_id": "tab-home-outline",
+      "semantic_role": "home",
+      "screen": "home",
+      "state": "unselected",
+      "library": "Phosphor Icons",
+      "icon_name": "House",
+      "variant": "regular",
+      "source_url": "https://phosphoricons.com/?q=house",
+      "license": "MIT",
+      "license_url": "https://github.com/phosphor-icons/core/blob/main/LICENSE",
+      "permission_basis": "Official Phosphor icon under MIT",
+      "svg_path": "assets/icons/phosphor/tab-home-regular.svg",
+      "preview_path": "assets/icons/phosphor/tab-home-regular.png",
+      "size": 24,
+      "color": "#7C8791",
+      "target_layers": ["Home / Bottom Navigation / Home / Icon"]
+    }
+  ]
+}

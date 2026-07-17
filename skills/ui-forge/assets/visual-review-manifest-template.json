@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "figma_file_key": "",
+  "figma_file_url": "",
+  "generated_at": "",
+  "review_revision": "",
+  "screens": [
+    {
+      "screen_key": "home",
+      "name": "Home",
+      "group": "Core",
+      "figma_node_id": "",
+      "width": 390,
+      "height": 844,
+      "screenshot": "screens/home.png",
+      "fingerprint": "",
+      "status": "new",
+      "nodes": []
+    }
+  ]
+}

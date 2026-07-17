@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "profile_id": "material-style-primary",
+  "dominant_modality": "photography",
+  "secondary_modalities": [],
+  "confidence": 0.9,
+  "evidence": [
+    {
+      "input_id": "reference-01",
+      "observation": "Repeated full-bleed commercial photography with soft daylight"
+    }
+  ],
+  "style_dimensions": {
+    "realism": "photorealistic",
+    "dimensionality": "natural-depth",
+    "line_behavior": "none",
+    "palette": "brand-warm-neutral",
+    "lighting": "soft-daylight",
+    "shadow": "natural-soft",
+    "texture": "real-world",
+    "perspective": "eye-level-commercial",
+    "cropping": "subject-led-with-copy-space",
+    "character_language": "approachable-everyday-people",
+    "composition_density": "medium"
+  },
+  "generation_policy": {
+    "must_match_reference_material": true,
+    "original_subjects_required": true,
+    "reference_asset_reuse": false,
+    "allow_secondary_modalities": false,
+    "do_not_copy": [
+      "identifiable people",
+      "characters or mascots",
+      "logos",
+      "vehicle or building identity",
+      "poses",
+      "distinctive compositions"
+    ]
+  }
+}

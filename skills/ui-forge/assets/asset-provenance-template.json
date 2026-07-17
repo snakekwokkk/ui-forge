@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "asset_id": "asset-hero-01",
+      "path": "assets/isolated/hero-01.png",
+      "source_role": "generated_in_workflow",
+      "usage": "generated_original",
+      "permission_basis": "Created during this UIForge run",
+      "reference_inputs": [],
+      "notes": "Original asset guided by abstract brand DNA only"
+    }
+  ]
+}

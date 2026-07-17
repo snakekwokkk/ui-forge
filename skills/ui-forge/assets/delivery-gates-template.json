@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "figma_file_key": "",
+  "selected_option": "",
+  "asset_library": {
+    "asset_manifest_path": "asset-manifest.json",
+    "figma_section_node_id": "",
+    "minimum_assets": 12,
+    "target_range": [12, 18],
+    "accepted_asset_ids": [],
+    "placements": [
+      {
+        "asset_id": "",
+        "asset_node_id": "",
+        "library_tile_node_id": ""
+      }
+    ]
+  },
+  "auto_layout": {
+    "screens": [
+      {
+        "screen_key": "",
+        "root_node_id": "",
+        "root_layout_mode": "",
+        "structural_container_ids": [],
+        "auto_layout_container_ids": [],
+        "exceptions": []
+      }
+    ]
+  },
+  "brand_dna_variables": {
+    "brand_dna_path": "brand-dna.json",
+    "collections": {
+      "primitives": "",
+      "semantic": "",
+      "dimensions": "",
+      "typography": ""
+    },
+    "required_token_ids": [],
+    "token_to_variable": [
+      {
+        "token_id": "",
+        "variable_id": "",
+        "collection": ""
+      }
+    ],
+    "eligible_property_count": 0,
+    "bound_property_count": 0,
+    "unbound_eligible_properties": []
+  }
+}

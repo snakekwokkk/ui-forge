@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "assets": {
+    "asset-hero-01": {
+      "image_hash": "REPLACE_WITH_FIGMA_IMAGE_HASH",
+      "source_path": "assets/isolated/hero-01.png"
+    }
+  }
+}
