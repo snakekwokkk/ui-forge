@@ -7,6 +7,8 @@
       "source_role": "generated_in_workflow",
       "usage": "generated_original",
       "permission_basis": "Created during this UIForge run",
+      "background_policy": "transparent_required",
+      "background_authorization": "",
       "reference_inputs": [],
       "notes": "Original asset guided by abstract brand DNA only"
     }

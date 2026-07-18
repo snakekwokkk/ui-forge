@@ -19,3 +19,7 @@ Capture semantic colors, type style and fallback, spacing scale, grids, componen
 Preserve screen count, order, hierarchy, primary actions, required content, and repeated components. Ignore accidental sketch imprecision and placeholder styling. Identify missing copy, media roles, responsive assumptions, and product decisions that cannot be inferred safely.
 
 Do not let a reference screenshot silently replace the user's wireframe structure.
+
+Create `wireframe-content-lock.json` from the bundled template before option planning. Transcribe every user-visible string, number, label, and action in the original language. Default to exact copy with Unicode normalization and whitespace-only layout normalization. Do not translate, rewrite, shorten, expand, omit, or add product copy unless the user explicitly authorizes the change and the lock records that authorization.
+
+Assign stable `content_id` values to locked text and stable `structure_id` values to required modules. Lock each required module's nearest required parent and sibling order. The three options may add decorative, non-content structure, but they must preserve the locked modules and their relative hierarchy.

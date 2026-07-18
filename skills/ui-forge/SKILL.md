@@ -18,6 +18,7 @@ Persist material decisions in project artifacts when filesystem access is availa
 - `input-classification.json`
 - `brand-dna.json`
 - `wireframe-analysis.json`
+- `wireframe-content-lock.json`
 - `material-style-profile.json`
 - `option-a-design-spec.json`
 - `option-b-design-spec.json`
@@ -28,6 +29,7 @@ Persist material decisions in project artifacts when filesystem access is availa
 - `library-selection-manifest.json`
 - `icon-manifest.json`
 - `asset-manifest.json`
+- `preview-gates.json`
 - `figma-build-report.json`
 - `delivery-gates.json`
 - `visual-review/manifest.json`
@@ -35,6 +37,16 @@ Persist material decisions in project artifacts when filesystem access is availa
 - `visual-review/screens/*.png`
 
 Use the templates in `assets/` rather than inventing incompatible shapes. Validate JSON artifacts with `scripts/validate_project_state.py`.
+
+## Hard preview gates
+
+Before showing A, B, and C or entering `AWAITING_PRIMARY_OPTION_SELECTION`, create `wireframe-content-lock.json` from the bundled template and run `scripts/validate_preview_gates.py` against all three layer specs. The validator must return `pass` and write `preview-gates.json`.
+
+1. **Wireframe copy fidelity:** transcribe every user-visible wireframe string, number, label, and action into the content lock. Preserve the original language and wording. Do not translate, rewrite, omit, summarize, or add product copy unless the user explicitly authorizes that change. Give every text layer a stable `content_id`.
+2. **Wireframe structure fidelity:** lock required modules, parent relationships, and sibling order. Give every required structural Frame a stable `structure_id`. Brand references may change visual styling, imagery, density, and emphasis; they may not replace the wireframe hierarchy or content.
+3. **Raster transparency:** every isolated complex raster defaults to `background_policy: transparent_required`. Require a real alpha channel, transparent coverage, and transparent outer borders. A white, pale, studio, or other baked rectangular background fails even when the file extension is PNG. Use `embedded_background_authorized` only for a user-authorized asset whose background is intentionally part of the composition, and record the authorization.
+
+Do not manually mark preview QA as passed. Derive preview-gate status from the validator report. A missing report, a failed check, or an unverifiable claim blocks preview presentation and keeps the workflow in `PLANNING_HOME_OPTIONS`, `PLANNING_OPTION_ASSETS`, or `GENERATING_HOME_PREVIEWS`.
 
 ## Hard delivery gates
 
@@ -79,7 +91,7 @@ For Brand DNA, cover semantic colors, typography style and fallback, spacing, gr
 
 Read [references/material-style-matching.md](references/material-style-matching.md). Create `material-style-profile.json` from `assets/material-style-profile-template.json`. Detect the dominant and allowed secondary material languages from the reference evidence before planning any complex asset. Validate it with `scripts/validate_material_style.py material-style-profile.json`.
 
-For the wireframe, cover canvas, screen order, page hierarchy, content, components, repeated patterns, actions, placeholder media, responsive assumptions, and meaningful ambiguities. Treat wireframe visuals as structure rather than brand styling.
+For the wireframe, cover canvas, screen order, page hierarchy, content, components, repeated patterns, actions, placeholder media, responsive assumptions, and meaningful ambiguities. Treat wireframe visuals as structure rather than brand styling. Create `wireframe-content-lock.json` before option design. The default copy policy is exact: preserve the supplied language, wording, numbers, punctuation, labels, and actions.
 
 Read [references/icon-sourcing.md](references/icon-sourcing.md). Identify every semantic icon role required by navigation, shortcuts, status, and actions. Mobile tab bars must include recognizable icons plus labels unless the supplied platform convention explicitly requires another pattern. Never substitute emoji, arbitrary Unicode glyphs, or text characters for real product icons.
 
@@ -101,13 +113,15 @@ For a multi-screen wireframe, default to comparing only the most representative 
 
 Choose a consistent icon family and visual weight for each direction. Use only approved open-source libraries from [references/icon-sourcing.md](references/icon-sourcing.md). Prefer Iconoir, Phosphor, or Lucide for general product UI; use Phosphor or Remix Icon when matched outline and fill states are required; use Tabler or Lucide when broad business coverage is more important. Record all icon decisions in `icon-manifest.json` and validate them with `scripts/validate_icon_manifest.py`. Preview and Figma must use the same official source SVG; a PNG may be used only as a deterministic preview derivative recorded beside that SVG.
 
-When generating complex bitmap assets, load and follow the installed image-generation skill. Do not use image generation to create the final full-screen UI preview. Use source images only as references unless the user explicitly requests an edit. Preserve exact user copy where requested and avoid proprietary third-party assets unless the user supplied and authorized them.
+When generating complex bitmap assets, load and follow the installed image-generation skill. Do not use image generation to create the final full-screen UI preview. Use source images only as references unless the user explicitly requests an edit. Preserve the locked wireframe copy exactly and avoid proprietary third-party assets unless the user supplied and authorized them.
 
 Match the generated asset medium to `material-style-profile.json`. Photography-led references require original photography-led assets; 3D references require original 3D assets; flat cartoon, vector illustration, hand-drawn, clay, collage, or other detected systems require the corresponding original system. Do not default to 3D merely because it is visually prominent. Use mixed media only when the references provide credible mixed-media evidence or the user requests it.
 
-Do not place reference imagery directly into any option preview. Generate new original complex assets from the extracted design DNA and subject category. Do not reproduce reference people, devices, logos, screenshots, mascots, props, or distinctive compositions. Record raster permission and origin in `asset-provenance.json`, then validate it before rendering.
+Do not place reference imagery directly into any option preview. Generate new original complex assets from the extracted design DNA and subject category. Do not reproduce reference people, devices, logos, screenshots, mascots, props, or distinctive compositions. Generate isolated complex objects with a real transparent background; never prompt for or retain a white, pale, studio, or other baked rectangular background. Record raster permission, origin, and `background_policy` in `asset-provenance.json`.
 
-Read [references/same-source-pipeline.md](references/same-source-pipeline.md). Create and validate one schema-v2 `*.layers.json` file for each home direction from `assets/layer-spec-template.json`. Model the UI as nested `frame` nodes with semantic structural roles and Auto Layout settings; every child must declare sizing and `layout_positioning`. Render the three previews with `scripts/render_layer_spec.py`. The renderer must use the same asset files, bounds, crop, rotation, opacity, hierarchy, and z-order that Figma will use.
+Read [references/same-source-pipeline.md](references/same-source-pipeline.md). Create and validate one schema-v2 `*.layers.json` file for each home direction from `assets/layer-spec-template.json`. Model the UI as nested `frame` nodes with semantic structural roles and Auto Layout settings; every child must declare sizing and `layout_positioning`. Assign the locked `content_id` to every text layer and the locked `structure_id` to every required structural Frame. Render the three previews with `scripts/render_layer_spec.py`. The renderer must use the same asset files, bounds, crop, rotation, opacity, hierarchy, and z-order that Figma will use.
+
+After rendering, run `scripts/validate_preview_gates.py` with the content lock, provenance manifest, project root, and all three layer specs. Do not present options until it writes a passing `preview-gates.json`.
 
 Present the Brand DNA summary and all three labeled home options together, then stop at `AWAITING_PRIMARY_OPTION_SELECTION`. Require one primary selection: `A`, `B`, `C`, or `adjust options`. Do not accept `all` at this first gate unless the user explicitly overrides the staged workflow.
 
@@ -200,6 +214,8 @@ After the selected full screen set passes QA, stop at `AWAITING_ADDITIONAL_OPTIO
 - If a valid Figma target was not supplied, request it immediately after primary selection together with confirmation of the chosen direction.
 - Do not default to building all three complete sets.
 - Allow token-level corrections without restarting analysis.
+- Never translate, rewrite, omit, or add wireframe copy without explicit user authorization recorded in the content lock.
+- Never accept an opaque rectangular raster as an isolated complex asset merely because it is a PNG.
 - Never claim a bitmap extraction is fully editable when it remains rasterized.
 - Do not show label-only mobile tab bars when the information architecture calls for primary app navigation; use sourced vector icons and labels with clear selected states.
 - Do not bulk-download component or chart libraries, crawl their complete repositories, or copy their default themes into the design. Use the registry to choose a library, then retrieve only exact official resources needed for the current screens.
@@ -208,4 +224,4 @@ After the selected full screen set passes QA, stop at `AWAITING_ADDITIONAL_OPTIO
 
 ## Completion criteria
 
-Complete preview generation only when inputs are classified, Brand DNA is summarized, the wireframe is interpreted, a valid material-style profile controls original asset generation, a valid `library-selection-manifest.json` records the on-demand component/icon/chart decisions, required icon roles are mapped in a valid `icon-manifest.json`, three distinct labeled home options are presented with normal mobile navigation icons, and the workflow is waiting for one primary selection. Complete primary Figma delivery only when the selected direction is extended across the remaining wireframes; every accepted one of at least 12 meaningful reusable candidates matches the approved material-style profile and is present and labeled in the Figma asset library; every managed screen root and structural container passes Auto Layout validation; every required Brand DNA token is mapped to a variable and every eligible managed-screen property is bound; `validate_delivery_gates.py` returns `pass`; sourced icons remain editable vectors; selected component and chart patterns remain themed and editable; the approved home preview is reproduced from the same layers; visual QA is recorded; and an up-to-date Visual Review containing every managed screen has been generated and returned. Then wait for screenshot annotations or the optional additional-option decision.
+Complete preview generation only when inputs are classified, Brand DNA is summarized, the wireframe is interpreted, exact wireframe copy and required structure are locked, all isolated complex rasters pass alpha validation, a valid material-style profile controls original asset generation, a valid `library-selection-manifest.json` records the on-demand component/icon/chart decisions, required icon roles are mapped in a valid `icon-manifest.json`, and `validate_preview_gates.py` writes a passing `preview-gates.json` for A, B, and C. Only then present the three labeled home options and wait for one primary selection. Complete primary Figma delivery only when the selected direction is extended across the remaining wireframes; every accepted one of at least 12 meaningful reusable candidates matches the approved material-style profile and is present and labeled in the Figma asset library; every managed screen root and structural container passes Auto Layout validation; every required Brand DNA token is mapped to a variable and every eligible managed-screen property is bound; `validate_delivery_gates.py` returns `pass`; sourced icons remain editable vectors; selected component and chart patterns remain themed and editable; the approved home preview is reproduced from the same layers; visual QA is recorded; and an up-to-date Visual Review containing every managed screen has been generated and returned. Then wait for screenshot annotations or the optional additional-option decision.

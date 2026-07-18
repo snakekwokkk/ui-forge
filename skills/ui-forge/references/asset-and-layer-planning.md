@@ -15,6 +15,10 @@ Plan editability before reconstruction.
 
 Prefer only user-authorized target-brand assets. Otherwise generate new original complex assets independently with transparent backgrounds and sufficient padding. Reference screenshots and campaign images are never extraction sources by default. If a user-authorized flattened composition exists, isolate the smallest complex region possible and reconstruct surrounding surfaces natively.
 
+Record `background_policy: transparent_required` for isolated objects, characters, 3D props, cutouts, and reusable illustrations. Validate a real alpha channel, transparent coverage, and transparent outer borders before preview composition. Reject white, pale, gradient, studio, or other opaque rectangular backgrounds even when the filename ends in `.png`.
+
+Use `background_policy: embedded_background_authorized` only for a user-authorized asset whose background is intentionally part of the final composition, such as approved full-bleed photography. Record the user's authorization in `background_authorization`; do not use this exception to bypass difficult edge cleanup.
+
 For a selected direction, maintain a candidate catalog of at least 12 meaningful complex assets or variants, normally 12–18. A useful catalog may include primary hero objects, alternate poses, promotional objects, empty-state illustrations, security objects, financial objects, decorative clusters, and background treatments. Count only independently reusable visual assets; do not count text, buttons, cards, or trivial duplicate exports.
 
 Use the approved material-style profile as the source of truth for every generated candidate. If the reference system is photographic, the catalog may consist entirely of original photography and photographic cutouts. If it is cartoon, 3D, vector, hand-drawn, clay, collage, or mixed media, generate the corresponding original asset family. Do not force a medium that is absent from the references. Keep recurring people or characters consistent by defining identity, proportions, wardrobe or shape language, palette, and rendering rules before generating pose variants.
@@ -29,7 +33,7 @@ Record source, ownership, dimensions, crop, alpha status, Figma destination, and
 
 Record `style_profile_id`, `material_modality`, and `style_match` for every accepted complex asset. The preview and Figma build must use the same validated file.
 
-Record `source_role`, `usage`, and `permission_basis` in `asset-provenance.json`. Validate provenance before preview rendering and again before Figma upload.
+Record `source_role`, `usage`, `permission_basis`, `background_policy`, and any `background_authorization` in `asset-provenance.json`. Validate provenance and alpha transparency before preview rendering and again before Figma upload.
 
 ## Review triggers
 

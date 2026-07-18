@@ -19,6 +19,8 @@ EXPECTED = {
         "asset_manifest",
         "candidate_asset_minimum",
         "candidate_asset_target_range",
+        "preview_gates",
+        "preview_gate_report",
         "qa",
     },
     "design-spec": {"option", "label", "intent", "canvas", "screens", "tokens", "components", "assets", "constraints"},
@@ -63,6 +65,89 @@ def main() -> int:
             raise SystemExit(f"asset catalog requires at least {minimum} assets before extension")
     if args.kind == "design-spec" and not isinstance(data["screens"], list):
         raise SystemExit("screens must be an array")
+    if args.kind == "project-state":
+        preview_gates = data["preview_gates"]
+        required_preview_gates = {
+            "wireframe_fidelity",
+            "raster_transparency",
+            "layer_specs",
+            "asset_provenance",
+        }
+        if not isinstance(preview_gates, dict):
+            raise SystemExit("preview_gates must be an object")
+        missing_preview_gates = required_preview_gates - set(preview_gates)
+        if missing_preview_gates:
+            raise SystemExit(
+                "preview_gates missing: " + ", ".join(sorted(missing_preview_gates))
+            )
+        awaiting_selection = data["status"] in {
+            "AWAITING_PRIMARY_OPTION_SELECTION",
+            "awaiting_primary_option_selection",
+        }
+        if awaiting_selection:
+            if any(
+                preview_gates[key] != "pass" for key in required_preview_gates
+            ):
+                raise SystemExit(
+                    "cannot enter AWAITING_PRIMARY_OPTION_SELECTION "
+                    "until every preview gate is pass"
+                )
+            report_value = data["preview_gate_report"]
+            if not isinstance(report_value, str) or not report_value.strip():
+                raise SystemExit(
+                    "AWAITING_PRIMARY_OPTION_SELECTION requires preview_gate_report"
+                )
+            report_path = (args.path.resolve().parent / report_value).resolve()
+            try:
+                report = json.loads(report_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise SystemExit(f"invalid preview gate report: {exc}")
+            if report.get("schema_version") != 1:
+                raise SystemExit("preview gate report schema_version must be 1")
+            if report.get("status") != "pass":
+                raise SystemExit("preview gate report status must be pass")
+            if set(report.get("required_options", [])) != {"A", "B", "C"}:
+                raise SystemExit("preview gate report must cover options A, B, and C")
+            report_sections = {
+                "wireframe_fidelity",
+                "raster_transparency",
+                "layer_specs",
+                "asset_provenance",
+            }
+            for section in report_sections:
+                if report.get(section, {}).get("status") != "pass":
+                    raise SystemExit(
+                        f"preview gate report section must pass: {section}"
+                    )
+            try:
+                project_root = Path(report["project_root"]).resolve()
+                content_lock = Path(
+                    report["wireframe_fidelity"]["content_lock"]
+                ).resolve()
+                provenance = Path(
+                    report["raster_transparency"]["asset_provenance"]
+                ).resolve()
+                spec_paths = [
+                    Path(value).resolve()
+                    for value in report["layer_specs"]["validated_specs"]
+                ]
+                from validate_preview_gates import run_gates
+
+                recomputed = run_gates(
+                    content_lock,
+                    provenance,
+                    project_root,
+                    spec_paths,
+                )
+            except (KeyError, TypeError, ValueError, SystemExit) as exc:
+                raise SystemExit(
+                    f"preview gate report cannot be revalidated: {exc}"
+                ) from exc
+            if report.get("hashes") != recomputed.get("hashes"):
+                raise SystemExit(
+                    "preview gate report is stale or fabricated; "
+                    "rerun validate_preview_gates.py"
+                )
 
     print(f"valid {args.kind}: {args.path}")
     return 0

@@ -1,7 +1,7 @@
 interface:
   display_name: "UIForge"
   short_description: "生成移动端 UI、写入 Figma，并通过截图标注继续修改"
-  default_prompt: "使用 $ui-forge 提取品牌基因，先识别参考图的摄影、3D、卡通、插画或混合素材语言，再生成同类型但内容原创的素材和移动端 UI，最后同源写入 Figma 并生成 Visual Review。"
+  default_prompt: "使用 $ui-forge 锁定线框图的原始文案与结构，提取品牌基因，生成经过透明素材和一致性门禁验证的三个移动端 UI 方向，再将选中方向同源写入 Figma。"
   brand_color: "#7C3AED"
   icon_small: "./assets/ui-forge-icon-400.png"
   icon_large: "./assets/ui-forge-logo-1024.png"

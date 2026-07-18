@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "source_id": "wireframe-01",
+  "copy_policy": {
+    "mode": "exact",
+    "normalization": "unicode-nfc-collapse-whitespace",
+    "allow_unlocked_text": false,
+    "authorization_basis": ""
+  },
+  "screens": [
+    {
+      "screen_id": "home",
+      "screen_order": 0,
+      "structure": [
+        {
+          "structure_id": "home.header",
+          "parent_structure_id": null,
+          "order": 0,
+          "required": true
+        },
+        {
+          "structure_id": "home.hero",
+          "parent_structure_id": null,
+          "order": 1,
+          "required": true
+        },
+        {
+          "structure_id": "home.primary-action",
+          "parent_structure_id": "home.hero",
+          "order": 0,
+          "required": true
+        },
+        {
+          "structure_id": "home.bottom-navigation",
+          "parent_structure_id": null,
+          "order": 2,
+          "required": true
+        }
+      ],
+      "copy": [
+        {
+          "content_id": "home.hero.title",
+          "expected_text": "Exact wireframe title",
+          "parent_structure_id": "home.hero",
+          "order": 0,
+          "required": true,
+          "source": "wireframe"
+        },
+        {
+          "content_id": "home.primary-action.label",
+          "expected_text": "Exact wireframe button label",
+          "parent_structure_id": "home.primary-action",
+          "order": 0,
+          "required": true,
+          "source": "wireframe"
+        }
+      ]
+    }
+  ]
+}

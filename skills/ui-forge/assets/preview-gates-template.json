@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "pending",
+  "project_root": "",
+  "required_options": ["A", "B", "C"],
+  "wireframe_fidelity": {
+    "status": "pending",
+    "content_lock": "",
+    "validated_specs": [],
+    "copy_checks": 0,
+    "structure_checks": 0
+  },
+  "raster_transparency": {
+    "status": "pending",
+    "asset_provenance": "",
+    "validated_assets": [],
+    "transparent_required_count": 0,
+    "authorized_embedded_background_count": 0
+  },
+  "layer_specs": {
+    "status": "pending",
+    "validated_specs": []
+  },
+  "asset_provenance": {
+    "status": "pending",
+    "validated_specs": []
+  },
+  "errors": []
+}

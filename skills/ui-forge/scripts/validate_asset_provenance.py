@@ -12,6 +12,7 @@ from validate_layer_spec import iter_layers
 
 ALLOWED_USAGE = {"generated_original", "user_authorized_asset", "target_brand_owned_asset"}
 REJECTED_USAGE = {"reference_only", "competitor_reference", "website_scrape", "unconfirmed"}
+BACKGROUND_POLICIES = {"transparent_required", "embedded_background_authorized"}
 
 
 def load(path: Path) -> dict:
@@ -40,6 +41,18 @@ def validate_provenance(spec_path: Path, provenance_path: Path) -> int:
             raise SystemExit("every provenance record requires asset_id")
         if record["asset_id"] in by_id:
             raise SystemExit(f"duplicate provenance asset_id: {record['asset_id']}")
+        background_policy = record.get("background_policy", "transparent_required")
+        if background_policy not in BACKGROUND_POLICIES:
+            raise SystemExit(
+                f"invalid background_policy for {record['asset_id']}: {background_policy}"
+            )
+        if background_policy == "embedded_background_authorized" and not str(
+            record.get("background_authorization", "")
+        ).strip():
+            raise SystemExit(
+                "embedded_background_authorized requires background_authorization: "
+                f"{record['asset_id']}"
+            )
         by_id[record["asset_id"]] = record
 
     used = 0

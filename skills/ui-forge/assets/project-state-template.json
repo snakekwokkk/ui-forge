@@ -15,6 +15,13 @@
   "asset_manifest": [],
   "candidate_asset_minimum": 12,
   "candidate_asset_target_range": [12, 18],
+  "preview_gates": {
+    "wireframe_fidelity": "pending",
+    "raster_transparency": "pending",
+    "layer_specs": "pending",
+    "asset_provenance": "pending"
+  },
+  "preview_gate_report": "preview-gates.json",
   "delivery_gates": {
     "asset_library": "pending",
     "auto_layout": "pending",
