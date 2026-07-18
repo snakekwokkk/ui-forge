@@ -1,6 +1,6 @@
 {
   "name": "ui-forge",
-  "version": "0.5.2+codex.20260718141026",
+  "version": "0.5.2+codex.20260718143449",
   "description": "Detect the material language of brand references, generate original matching photography, 3D, cartoon, illustration, or mixed-media assets, and rebuild selected mobile UI directions in Figma.",
   "author": {
     "name": "Snake"
@@ -16,7 +16,7 @@
   "interface": {
     "displayName": "UIForge",
     "shortDescription": "Design mobile UI, sync it to Figma, then revise it through screenshot annotations.",
-    "longDescription": "UIForge classifies mixed visual inputs, extracts brand DNA without reusing reference imagery, locks exact wireframe copy and required structure across every option, and generates original photography, 3D, cartoon, illustration, clay, collage, or mixed-media assets that match the detected material language. Preview delivery is blocked when copy changes, required modules drift, or isolated rasters lack real alpha transparency. UIForge then extends the selected direction, writes editable screens into Figma, and generates a node-mapped Visual Review. Final delivery is blocked unless all accepted candidate assets are present in the Figma asset library, every managed structural container uses Auto Layout, and every eligible Brand DNA property is bound to Figma Variables.",
+    "longDescription": "UIForge classifies mixed visual inputs, extracts brand DNA without reusing reference imagery, locks exact wireframe copy and required structure, and analyzes how reference modules pair text with icons, people, 3D, illustration, textures, and composite scenes. It maps those relationships, media positions, and visual share to existing wireframe modules, then generates role-correct original assets: isolated objects require real alpha, while integrated scenes, card surfaces, and full-bleed backgrounds may remain opaque. Preview delivery is blocked when copy or structure drifts, reference-media analysis is skipped, omissions lack rationale, or raster roles are invalid. UIForge then extends the selected direction, writes editable screens into Figma, and generates a node-mapped Visual Review with final delivery gates.",
     "developerName": "Snake",
     "category": "Productivity",
     "capabilities": [
@@ -24,7 +24,7 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Analyze these references and wireframes, lock the exact wireframe copy and structure, generate transparent original assets without copying reference imagery, validate all preview gates, then show three home-screen directions for a single selection.",
+      "Analyze these references and wireframes, lock the exact copy and structure, map reference text-media relationships to existing modules, generate role-correct transparent or composite original assets, validate every preview gate, then show three home-screen directions for a single selection.",
       "Confirm my selected UIForge direction, build its reusable asset catalog, and extend it into my Figma frame.",
       "Split this app screenshot and rebuild it as editable Figma layers.",
       "Generate a Visual Review for every managed Figma screen, then apply my screenshot annotations back to the matching Figma nodes."

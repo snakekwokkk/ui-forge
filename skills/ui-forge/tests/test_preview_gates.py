@@ -18,6 +18,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 from validate_preview_gates import run_gates  # noqa: E402
 from validate_raster_alpha import validate_alpha  # noqa: E402
+from validate_reference_media import validate_reference_media  # noqa: E402
 from validate_wireframe_fidelity import validate_specs  # noqa: E402
 
 
@@ -192,6 +193,8 @@ class PreviewGateTests(unittest.TestCase):
         )
         self.provenance_path = self.root / "asset-provenance.json"
         self.write_provenance("assets/hero.png", "transparent_required")
+        self.media_plan_path = self.root / "reference-media-plan.json"
+        self.write_media_plan()
 
     def tearDown(self) -> None:
         self.temp.cleanup()
@@ -201,6 +204,7 @@ class PreviewGateTests(unittest.TestCase):
         asset_path: str,
         policy: str,
         authorization: str = "",
+        asset_role: str = "isolated_object",
     ) -> None:
         self.provenance_path.write_text(
             json.dumps(
@@ -213,10 +217,77 @@ class PreviewGateTests(unittest.TestCase):
                             "source_role": "generated_in_workflow",
                             "usage": "generated_original",
                             "permission_basis": "test fixture",
+                            "asset_role": asset_role,
+                            "target_structure_id": "home.hero",
+                            "composition_purpose": "test media placement",
                             "background_policy": policy,
                             "background_authorization": authorization,
                             "reference_inputs": [],
                             "notes": "",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def write_media_plan(
+        self,
+        asset_role: str = "isolated_raster",
+        expectation: str = "required",
+        apply_options: tuple[str, ...] = ("A", "B", "C"),
+    ) -> None:
+        decisions = []
+        for option in ("A", "B", "C"):
+            applied = option in apply_options
+            decisions.append(
+                {
+                    "option": option,
+                    "decision": "apply" if applied else "omit",
+                    "asset_role": asset_role if applied else "none",
+                    "layer_ids": [f"{option}-asset"] if applied else [],
+                    "placement": "supporting" if applied else "none",
+                    "visual_share_band": "supporting" if applied else "none",
+                    "rationale": (
+                        "Applies the observed media relationship."
+                        if applied
+                        else "This direction intentionally keeps the module text-led."
+                    ),
+                }
+            )
+        self.media_plan_path.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "analysis_complete": True,
+                    "source_reference_ids": ["reference-01"],
+                    "reference_patterns": [
+                        {
+                            "pattern_id": "hero-media",
+                            "component_role": "hero",
+                            "pairing": "image-title",
+                            "asset_type": asset_role,
+                            "position": "supporting",
+                            "visual_share_band": "supporting",
+                            "recurrence": (
+                                "isolated" if expectation == "optional" else "repeated"
+                            ),
+                            "confidence": 0.9,
+                            "evidence": [
+                                {
+                                    "input_id": "reference-01",
+                                    "observation": "Hero copy is paired with supporting media.",
+                                }
+                            ],
+                        }
+                    ],
+                    "module_mappings": [
+                        {
+                            "screen_id": "home",
+                            "structure_id": "home.hero",
+                            "reference_pattern_ids": ["hero-media"],
+                            "media_expectation": expectation,
+                            "option_decisions": decisions,
                         }
                     ],
                 }
@@ -265,6 +336,7 @@ class PreviewGateTests(unittest.TestCase):
                     "candidate_asset_target_range": [12, 18],
                     "preview_gates": {
                         "wireframe_fidelity": gate_status,
+                        "reference_media_relationships": gate_status,
                         "raster_transparency": gate_status,
                         "layer_specs": gate_status,
                         "asset_provenance": gate_status,
@@ -280,6 +352,7 @@ class PreviewGateTests(unittest.TestCase):
     def test_all_preview_gates_pass(self) -> None:
         report = run_gates(
             self.lock_path,
+            self.media_plan_path,
             self.provenance_path,
             self.root,
             self.write_specs(),
@@ -288,6 +361,10 @@ class PreviewGateTests(unittest.TestCase):
         self.assertEqual(report["wireframe_fidelity"]["copy_checks"], 3)
         self.assertEqual(
             report["raster_transparency"]["transparent_required_count"],
+            1,
+        )
+        self.assertEqual(
+            report["reference_media_relationships"]["pattern_count"],
             1,
         )
 
@@ -344,6 +421,7 @@ class PreviewGateTests(unittest.TestCase):
             "assets/opaque.png",
             "embedded_background_authorized",
             "User explicitly approved this full-bleed background.",
+            asset_role="composite_scene",
         )
         report = validate_alpha(
             self.root,
@@ -351,6 +429,60 @@ class PreviewGateTests(unittest.TestCase):
             self.write_specs(asset_path="assets/opaque.png"),
         )
         self.assertEqual(report["authorized_embedded_background_count"], 1)
+
+    def test_generated_opaque_surface_texture_passes(self) -> None:
+        self.write_provenance(
+            "assets/opaque.png",
+            "opaque_composite_expected",
+            asset_role="surface_texture",
+        )
+        self.write_media_plan(asset_role="surface_texture")
+        specs = self.write_specs(asset_path="assets/opaque.png")
+        report = run_gates(
+            self.lock_path,
+            self.media_plan_path,
+            self.provenance_path,
+            self.root,
+            specs,
+        )
+        self.assertEqual(
+            report["raster_transparency"]["generated_opaque_composite_count"],
+            1,
+        )
+
+    def test_required_reference_media_cannot_be_omitted_everywhere(self) -> None:
+        self.write_media_plan(apply_options=())
+        with self.assertRaisesRegex(ValueError, "omitted from every option"):
+            validate_reference_media(
+                self.media_plan_path,
+                self.lock_path,
+                self.provenance_path,
+                self.write_specs(),
+            )
+
+    def test_optional_reference_media_may_be_omitted_with_rationale(self) -> None:
+        self.write_media_plan(expectation="optional", apply_options=())
+        report = validate_reference_media(
+            self.media_plan_path,
+            self.lock_path,
+            self.provenance_path,
+            self.write_specs(),
+        )
+        self.assertEqual(report["applied_decision_count"], 0)
+        self.assertEqual(report["omitted_with_rationale_count"], 3)
+
+    def test_repeated_high_confidence_pattern_cannot_be_marked_optional(self) -> None:
+        self.write_media_plan(expectation="optional", apply_options=())
+        plan = json.loads(self.media_plan_path.read_text(encoding="utf-8"))
+        plan["reference_patterns"][0]["recurrence"] = "repeated"
+        self.media_plan_path.write_text(json.dumps(plan), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "require at least one required"):
+            validate_reference_media(
+                self.media_plan_path,
+                self.lock_path,
+                self.provenance_path,
+                self.write_specs(),
+            )
 
     def test_project_state_cannot_await_selection_with_pending_gates(self) -> None:
         state_path = self.root / "project-state.json"
@@ -368,6 +500,7 @@ class PreviewGateTests(unittest.TestCase):
                     "candidate_asset_target_range": [12, 18],
                     "preview_gates": {
                         "wireframe_fidelity": "pending",
+                        "reference_media_relationships": "pending",
                         "raster_transparency": "pending",
                         "layer_specs": "pending",
                         "asset_provenance": "pending",
@@ -396,6 +529,7 @@ class PreviewGateTests(unittest.TestCase):
     def test_project_state_accepts_generated_passing_report(self) -> None:
         report = run_gates(
             self.lock_path,
+            self.media_plan_path,
             self.provenance_path,
             self.root,
             self.write_specs(),
@@ -427,6 +561,7 @@ class PreviewGateTests(unittest.TestCase):
                     "status": "pass",
                     "required_options": ["A", "B", "C"],
                     "wireframe_fidelity": {"status": "pass"},
+                    "reference_media_relationships": {"status": "pass"},
                     "raster_transparency": {"status": "pass"},
                     "layer_specs": {"status": "pass"},
                     "asset_provenance": {"status": "pass"},
@@ -453,6 +588,7 @@ class PreviewGateTests(unittest.TestCase):
     def test_project_state_rejects_stale_report_after_raster_change(self) -> None:
         report = run_gates(
             self.lock_path,
+            self.media_plan_path,
             self.provenance_path,
             self.root,
             self.write_specs(),

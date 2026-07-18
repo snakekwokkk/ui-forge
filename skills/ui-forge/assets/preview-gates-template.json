@@ -10,11 +10,21 @@
     "copy_checks": 0,
     "structure_checks": 0
   },
+  "reference_media_relationships": {
+    "status": "pending",
+    "media_plan": "",
+    "pattern_count": 0,
+    "module_mapping_count": 0,
+    "applied_decision_count": 0,
+    "omitted_with_rationale_count": 0,
+    "validated_specs": []
+  },
   "raster_transparency": {
     "status": "pending",
     "asset_provenance": "",
     "validated_assets": [],
     "transparent_required_count": 0,
+    "generated_opaque_composite_count": 0,
     "authorized_embedded_background_count": 0
   },
   "layer_specs": {

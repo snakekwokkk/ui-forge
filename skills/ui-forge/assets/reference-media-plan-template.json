@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "analysis_complete": true,
+  "source_reference_ids": ["reference-01"],
+  "reference_patterns": [
+    {
+      "pattern_id": "pattern-feature-icon-copy",
+      "component_role": "feature-shortcut",
+      "pairing": "icon-title-body",
+      "asset_type": "vector_icon",
+      "position": "leading-top",
+      "visual_share_band": "accent",
+      "recurrence": "repeated",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "input_id": "reference-01",
+          "observation": "Repeated shortcut modules pair a semantic icon with title and supporting copy"
+        }
+      ]
+    },
+    {
+      "pattern_id": "pattern-card-surface",
+      "component_role": "financial-card",
+      "pairing": "composite-image-with-native-overlay",
+      "asset_type": "surface_texture",
+      "position": "background-fill",
+      "visual_share_band": "dominant",
+      "recurrence": "prominent_single",
+      "confidence": 0.9,
+      "evidence": [
+        {
+          "input_id": "reference-01",
+          "observation": "The card uses a complex painterly surface while labels remain native and editable"
+        }
+      ]
+    }
+  ],
+  "module_mappings": [
+    {
+      "screen_id": "home",
+      "structure_id": "home.hero",
+      "reference_pattern_ids": ["pattern-card-surface"],
+      "media_expectation": "required",
+      "option_decisions": [
+        {
+          "option": "A",
+          "decision": "apply",
+          "asset_role": "surface_texture",
+          "layer_ids": ["A-card-texture"],
+          "placement": "background-fill",
+          "visual_share_band": "dominant",
+          "rationale": "Preserves the reference card-surface relationship with an original generated texture"
+        },
+        {
+          "option": "B",
+          "decision": "apply",
+          "asset_role": "surface_texture",
+          "layer_ids": ["B-card-texture"],
+          "placement": "background-fill",
+          "visual_share_band": "dominant",
+          "rationale": "Uses a distinct original texture while preserving the observed component anatomy"
+        },
+        {
+          "option": "C",
+          "decision": "omit",
+          "asset_role": "none",
+          "layer_ids": [],
+          "placement": "none",
+          "visual_share_band": "none",
+          "rationale": "This direction intentionally uses a restrained native surface while retaining the locked module and copy"
+        }
+      ]
+    }
+  ]
+}

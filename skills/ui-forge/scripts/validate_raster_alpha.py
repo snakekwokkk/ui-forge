@@ -18,7 +18,18 @@ except ModuleNotFoundError as exc:
 from validate_layer_spec import iter_layers
 
 
-POLICIES = {"transparent_required", "embedded_background_authorized"}
+POLICIES = {
+    "transparent_required",
+    "opaque_composite_expected",
+    "embedded_background_authorized",
+}
+ASSET_ROLES = {
+    "isolated_object",
+    "composite_scene",
+    "surface_texture",
+    "full_bleed_background",
+}
+OPAQUE_ROLES = {"composite_scene", "surface_texture", "full_bleed_background"}
 
 
 def load_json(path: Path) -> dict:
@@ -146,12 +157,28 @@ def validate_alpha(
                 f"asset {asset_id} requires background_authorization "
                 "for embedded_background_authorized"
             )
+        role = record.get("asset_role")
+        if role not in ASSET_ROLES:
+            raise ValueError(f"asset {asset_id} has invalid asset_role: {role}")
+        if role == "isolated_object" and policy != "transparent_required":
+            raise ValueError(
+                f"asset {asset_id} isolated_object must use transparent_required"
+            )
+        if policy == "transparent_required" and role != "isolated_object":
+            raise ValueError(
+                f"asset {asset_id} transparent_required is reserved for isolated_object"
+            )
+        if policy == "opaque_composite_expected" and role not in OPAQUE_ROLES:
+            raise ValueError(
+                f"asset {asset_id} opaque_composite_expected requires a composite role"
+            )
         by_id[asset_id] = record
 
     seen: set[str] = set()
     validated_assets: list[dict] = []
     transparent_required_count = 0
     authorized_count = 0
+    generated_opaque_composite_count = 0
     for spec_path in spec_paths:
         spec = load_json(spec_path)
         for layer in iter_layers(spec.get("layers", [])):
@@ -179,6 +206,37 @@ def validate_alpha(
                         "path": str(asset_path),
                         "background_policy": policy,
                         "status": "authorized",
+                    }
+                )
+                continue
+            if policy == "opaque_composite_expected":
+                generated_opaque_composite_count += 1
+                try:
+                    with Image.open(asset_path) as source:
+                        source.verify()
+                    with Image.open(asset_path) as source:
+                        width, height = source.size
+                        image_format = source.format
+                except OSError as exc:
+                    raise ValueError(
+                        f"cannot inspect composite raster asset {asset_path}: {exc}"
+                    ) from exc
+                if width < 2 or height < 2:
+                    raise ValueError(
+                        f"composite raster asset has invalid dimensions: {asset_id}"
+                    )
+                validated_assets.append(
+                    {
+                        "asset_id": asset_id,
+                        "path": str(asset_path),
+                        "asset_role": record["asset_role"],
+                        "background_policy": policy,
+                        "status": "pass",
+                        "image": {
+                            "format": image_format,
+                            "width": width,
+                            "height": height,
+                        },
                     }
                 )
                 continue
@@ -228,6 +286,7 @@ def validate_alpha(
         "asset_provenance": str(provenance_path.resolve()),
         "validated_assets": validated_assets,
         "transparent_required_count": transparent_required_count,
+        "generated_opaque_composite_count": generated_opaque_composite_count,
         "authorized_embedded_background_count": authorized_count,
     }
 
@@ -261,6 +320,7 @@ def main() -> int:
     print(
         "raster alpha: pass "
         f"({report['transparent_required_count']} transparent, "
+        f"{report['generated_opaque_composite_count']} generated composite, "
         f"{report['authorized_embedded_background_count']} authorized embedded)"
     )
     return 0

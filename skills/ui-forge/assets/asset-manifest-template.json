@@ -5,12 +5,16 @@
   "assets": [
     {
       "id": "",
-      "type": "figma_native",
+      "type": "clean_raster",
       "source": "",
       "source_role": "",
       "usage": "unconfirmed",
       "permission_basis": "",
       "ownership": "",
+      "asset_role": "isolated_object",
+      "target_structure_id": "",
+      "composition_purpose": "",
+      "background_policy": "transparent_required",
       "style_profile_id": "material-style-primary",
       "material_modality": "photography",
       "style_match": {
@@ -18,7 +22,7 @@
         "evidence": ""
       },
       "bounds": {},
-      "alpha": false,
+      "alpha": true,
       "destinations": [],
       "candidate_role": "used_or_optional",
       "layer_spec": {

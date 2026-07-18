@@ -19,7 +19,7 @@ Classify each relevant reference and determine a dominant modality plus any cred
 - `mixed-media`
 - `minimal-native-ui`
 
-Record evidence and confidence. Analyze rendering realism, dimensionality, contour and line behavior, proportions, palette, lighting, shadows, texture, camera or illustration perspective, cropping, background treatment, character language, prop language, and composition density.
+Record evidence and confidence. Analyze rendering realism, dimensionality, contour and line behavior, proportions, palette, lighting, shadows, texture, camera or illustration perspective, cropping, background treatment, character language, prop language, composition density, text-media pairing, media position, and visual share.
 
 When references conflict, weight repeated target-brand product UI above isolated campaign images or competitor references. Ask one compact clarification only when the conflict would materially change every generated asset; otherwise follow the strongest repeated evidence and document the decision.
 
@@ -34,6 +34,8 @@ When references conflict, weight repeated target-brand product UI above isolated
 - Mixed-media reference -> assign a documented modality to each semantic role instead of mixing media randomly.
 
 Generate subjects from wireframe content and product meaning. A car-finance screen may need cars, drivers, keys, dealers, and loan approval scenes; a banking screen may need customers, advisors, buildings, cards, or security scenes. Do not reuse the reference's specific person, character, vehicle design, building, device, logo, mascot, prop arrangement, pose, scene, or distinctive composition.
+
+Do not interpret a wireframe's missing pictures as evidence that media is unwanted. Use repeated reference component anatomy to decide whether an existing module needs a semantic icon, isolated object, original composite scene, or surface texture. Preserve text-only treatments when the reference evidence or a documented option decision supports them.
 
 ## Consistency
 

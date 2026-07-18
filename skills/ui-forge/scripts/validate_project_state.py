@@ -69,6 +69,7 @@ def main() -> int:
         preview_gates = data["preview_gates"]
         required_preview_gates = {
             "wireframe_fidelity",
+            "reference_media_relationships",
             "raster_transparency",
             "layer_specs",
             "asset_provenance",
@@ -110,6 +111,7 @@ def main() -> int:
                 raise SystemExit("preview gate report must cover options A, B, and C")
             report_sections = {
                 "wireframe_fidelity",
+                "reference_media_relationships",
                 "raster_transparency",
                 "layer_specs",
                 "asset_provenance",
@@ -124,6 +126,9 @@ def main() -> int:
                 content_lock = Path(
                     report["wireframe_fidelity"]["content_lock"]
                 ).resolve()
+                media_plan = Path(
+                    report["reference_media_relationships"]["media_plan"]
+                ).resolve()
                 provenance = Path(
                     report["raster_transparency"]["asset_provenance"]
                 ).resolve()
@@ -135,6 +140,7 @@ def main() -> int:
 
                 recomputed = run_gates(
                     content_lock,
+                    media_plan,
                     provenance,
                     project_root,
                     spec_paths,

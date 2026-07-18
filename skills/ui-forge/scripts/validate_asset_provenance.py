@@ -12,7 +12,18 @@ from validate_layer_spec import iter_layers
 
 ALLOWED_USAGE = {"generated_original", "user_authorized_asset", "target_brand_owned_asset"}
 REJECTED_USAGE = {"reference_only", "competitor_reference", "website_scrape", "unconfirmed"}
-BACKGROUND_POLICIES = {"transparent_required", "embedded_background_authorized"}
+BACKGROUND_POLICIES = {
+    "transparent_required",
+    "opaque_composite_expected",
+    "embedded_background_authorized",
+}
+ASSET_ROLES = {
+    "isolated_object",
+    "composite_scene",
+    "surface_texture",
+    "full_bleed_background",
+}
+OPAQUE_ROLES = {"composite_scene", "surface_texture", "full_bleed_background"}
 
 
 def load(path: Path) -> dict:
@@ -53,6 +64,38 @@ def validate_provenance(spec_path: Path, provenance_path: Path) -> int:
                 "embedded_background_authorized requires background_authorization: "
                 f"{record['asset_id']}"
             )
+        asset_role = record.get("asset_role")
+        if asset_role not in ASSET_ROLES:
+            raise SystemExit(
+                f"invalid asset_role for {record['asset_id']}: {asset_role}"
+            )
+        if not str(record.get("target_structure_id", "")).strip():
+            raise SystemExit(
+                f"missing target_structure_id for asset: {record['asset_id']}"
+            )
+        if not str(record.get("composition_purpose", "")).strip():
+            raise SystemExit(
+                f"missing composition_purpose for asset: {record['asset_id']}"
+            )
+        if asset_role == "isolated_object" and background_policy != "transparent_required":
+            raise SystemExit(
+                f"isolated_object must use transparent_required: {record['asset_id']}"
+            )
+        if background_policy == "transparent_required" and asset_role != "isolated_object":
+            raise SystemExit(
+                f"transparent_required is reserved for isolated_object: {record['asset_id']}"
+            )
+        if background_policy == "opaque_composite_expected":
+            if asset_role not in OPAQUE_ROLES:
+                raise SystemExit(
+                    f"opaque_composite_expected requires a composite asset_role: "
+                    f"{record['asset_id']}"
+                )
+            if record.get("usage") != "generated_original":
+                raise SystemExit(
+                    f"opaque_composite_expected requires generated_original usage: "
+                    f"{record['asset_id']}"
+                )
         by_id[record["asset_id"]] = record
 
     used = 0

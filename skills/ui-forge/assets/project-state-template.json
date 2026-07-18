@@ -17,6 +17,7 @@
   "candidate_asset_target_range": [12, 18],
   "preview_gates": {
     "wireframe_fidelity": "pending",
+    "reference_media_relationships": "pending",
     "raster_transparency": "pending",
     "layer_specs": "pending",
     "asset_provenance": "pending"

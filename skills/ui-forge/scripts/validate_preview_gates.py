@@ -12,6 +12,7 @@ from pathlib import Path
 from validate_asset_provenance import validate_provenance
 from validate_layer_spec import validate as validate_layer_spec
 from validate_raster_alpha import validate_alpha
+from validate_reference_media import validate_reference_media
 from validate_wireframe_fidelity import load_json, validate_specs
 
 
@@ -28,6 +29,7 @@ def sha256(path: Path) -> str:
 
 def run_gates(
     content_lock: Path,
+    media_plan: Path,
     provenance: Path,
     project_root: Path,
     spec_paths: list[Path],
@@ -47,6 +49,12 @@ def run_gates(
         provenance_specs.append(str(spec_path.resolve()))
 
     fidelity = validate_specs(content_lock, spec_paths)
+    media_relationships = validate_reference_media(
+        media_plan,
+        content_lock,
+        provenance,
+        spec_paths,
+    )
     transparency = validate_alpha(project_root, provenance, spec_paths)
     raster_hashes = {
         asset["path"]: sha256(Path(asset["path"]))
@@ -59,6 +67,7 @@ def run_gates(
         "project_root": str(project_root.resolve()),
         "required_options": sorted(REQUIRED_OPTIONS),
         "wireframe_fidelity": fidelity,
+        "reference_media_relationships": media_relationships,
         "raster_transparency": transparency,
         "layer_specs": {
             "status": "pass",
@@ -70,6 +79,7 @@ def run_gates(
         },
         "hashes": {
             "content_lock": sha256(content_lock),
+            "reference_media_plan": sha256(media_plan),
             "asset_provenance": sha256(provenance),
             "layer_specs": {
                 str(path.resolve()): sha256(path)
@@ -84,6 +94,7 @@ def run_gates(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--content-lock", required=True, type=Path)
+    parser.add_argument("--reference-media-plan", required=True, type=Path)
     parser.add_argument("--asset-provenance", required=True, type=Path)
     parser.add_argument("--layer-spec", required=True, action="append", type=Path)
     parser.add_argument("--project-root", type=Path)
@@ -91,6 +102,7 @@ def main() -> int:
     args = parser.parse_args()
 
     content_lock = args.content_lock.resolve()
+    media_plan = args.reference_media_plan.resolve()
     provenance = args.asset_provenance.resolve()
     spec_paths = [path.resolve() for path in args.layer_spec]
     project_root = (
@@ -99,7 +111,13 @@ def main() -> int:
         else content_lock.parent.resolve()
     )
     try:
-        report = run_gates(content_lock, provenance, project_root, spec_paths)
+        report = run_gates(
+            content_lock,
+            media_plan,
+            provenance,
+            project_root,
+            spec_paths,
+        )
     except (ValueError, SystemExit) as exc:
         failure = {
             "schema_version": 1,

@@ -7,10 +7,27 @@
       "source_role": "generated_in_workflow",
       "usage": "generated_original",
       "permission_basis": "Created during this UIForge run",
+      "asset_role": "isolated_object",
+      "target_structure_id": "home.hero",
+      "composition_purpose": "Reusable foreground hero object",
       "background_policy": "transparent_required",
       "background_authorization": "",
       "reference_inputs": [],
       "notes": "Original asset guided by abstract brand DNA only"
+    },
+    {
+      "asset_id": "asset-card-surface-01",
+      "path": "assets/composite/card-surface-01.png",
+      "source_role": "generated_in_workflow",
+      "usage": "generated_original",
+      "permission_basis": "Created during this UIForge run",
+      "asset_role": "surface_texture",
+      "target_structure_id": "home.card",
+      "composition_purpose": "Original complex card artwork clipped inside an editable native card component",
+      "background_policy": "opaque_composite_expected",
+      "background_authorization": "",
+      "reference_inputs": ["reference-01"],
+      "notes": "Only the complex surface is raster; product copy and labels remain native"
     }
   ]
 }
