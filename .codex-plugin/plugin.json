@@ -1,6 +1,6 @@
 {
   "name": "ui-forge",
-  "version": "0.5.2+codex.20260718143449",
+  "version": "0.5.2+codex.20260718144437",
   "description": "Detect the material language of brand references, generate original matching photography, 3D, cartoon, illustration, or mixed-media assets, and rebuild selected mobile UI directions in Figma.",
   "author": {
     "name": "Snake"
@@ -16,7 +16,7 @@
   "interface": {
     "displayName": "UIForge",
     "shortDescription": "Design mobile UI, sync it to Figma, then revise it through screenshot annotations.",
-    "longDescription": "UIForge classifies mixed visual inputs, extracts brand DNA without reusing reference imagery, locks exact wireframe copy and required structure, and analyzes how reference modules pair text with icons, people, 3D, illustration, textures, and composite scenes. It maps those relationships, media positions, and visual share to existing wireframe modules, then generates role-correct original assets: isolated objects require real alpha, while integrated scenes, card surfaces, and full-bleed backgrounds may remain opaque. Preview delivery is blocked when copy or structure drifts, reference-media analysis is skipped, omissions lack rationale, or raster roles are invalid. UIForge then extends the selected direction, writes editable screens into Figma, and generates a node-mapped Visual Review with final delivery gates.",
+    "longDescription": "UIForge classifies mixed visual inputs, extracts brand DNA without reusing reference imagery, locks exact wireframe copy and required structure, and analyzes how reference modules pair text with icons, people, 3D, illustration, textures, and composite scenes. It maps those relationships, media positions, and visual share to existing wireframe modules, then generates role-correct original assets: isolated objects require real alpha, while integrated scenes, complex visual surfaces, and full-bleed backgrounds may remain opaque. Preview delivery is blocked when copy or structure drifts, reference-media analysis is skipped, omissions lack rationale, or raster roles are invalid. UIForge then extends the selected direction, writes editable screens into Figma, and generates a node-mapped Visual Review with final delivery gates.",
     "developerName": "Snake",
     "category": "Productivity",
     "capabilities": [

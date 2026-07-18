@@ -33,7 +33,7 @@ When references conflict, weight repeated target-brand product UI above isolated
 - Collage reference -> preserve layering, paper or photographic cutout logic, and intentional edge treatment.
 - Mixed-media reference -> assign a documented modality to each semantic role instead of mixing media randomly.
 
-Generate subjects from wireframe content and product meaning. A car-finance screen may need cars, drivers, keys, dealers, and loan approval scenes; a banking screen may need customers, advisors, buildings, cards, or security scenes. Do not reuse the reference's specific person, character, vehicle design, building, device, logo, mascot, prop arrangement, pose, scene, or distinctive composition.
+Generate subjects from wireframe content and product meaning. Select domain-relevant people, objects, environments, and scenes without importing a concrete example from the conversation into the reusable rules. Do not reuse the reference's specific person, character, vehicle design, building, device, logo, mascot, prop arrangement, pose, scene, or distinctive composition.
 
 Do not interpret a wireframe's missing pictures as evidence that media is unwanted. Use repeated reference component anatomy to decide whether an existing module needs a semantic icon, isolated object, original composite scene, or surface texture. Preserve text-only treatments when the reference evidence or a documented option decision supports them.
 

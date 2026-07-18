@@ -31,7 +31,7 @@ Generate an original raster when the reference relies on visual content that wou
 - photography or people;
 - 3D objects;
 - painterly or collaged surfaces;
-- complex card artwork;
+- complex integrated visual surfaces;
 - textured illustration;
 - multi-element scenes;
 - atmospheric light, particles, or integrated effects.
@@ -42,12 +42,8 @@ Do not generate a full UI screenshot. Generate only the complex visual region, t
 
 - `isolated_object` + `transparent_required`: reusable people, objects, cutouts, 3D props, and foreground illustrations. Require real alpha and clear outer borders.
 - `composite_scene` + `opaque_composite_expected`: an original integrated scene whose background and subjects are inseparable.
-- `surface_texture` + `opaque_composite_expected`: complex card face, painterly panel, or material surface clipped inside an editable component.
+- `surface_texture` + `opaque_composite_expected`: complex textured, painterly, or material surface clipped inside an editable component.
 - `full_bleed_background` + `opaque_composite_expected`: an original image intended to fill a hero or screen region.
 - `embedded_background_authorized`: an exact user-authorized target-brand asset whose embedded background is intentionally retained.
 
 Generated composite images do not require alpha. They require a target `structure_id`, a composition purpose, a defined placement/crop, and native editable overlay text.
-
-## Banking-card example
-
-When a reference shows a bank card with complex painted artwork, rebuild the card Frame, radius, shadow, carousel, labels, numbers, and controls as native layers. Generate an original card-surface image and clip it inside the card Frame. Do not recreate a distinctive third-party card design or bake dynamic product copy into the image.
