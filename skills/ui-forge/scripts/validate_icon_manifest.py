@@ -7,6 +7,8 @@ import argparse
 import json
 from pathlib import Path
 
+from validate_layer_spec import iter_layers
+
 
 ALLOWED_LIBRARIES = {"Iconoir", "Phosphor Icons", "Lucide", "Tabler Icons", "Remix Icon"}
 REQUIRED = {
@@ -33,6 +35,7 @@ def validate(manifest_path: Path, project_root: Path, layer_spec: Path | None = 
         raise SystemExit("icon manifest must contain a non-empty icons array")
 
     by_id: dict[str, dict] = {}
+    libraries: set[str] = set()
     for index, icon in enumerate(icons):
         if not isinstance(icon, dict):
             raise SystemExit(f"icon {index} must be an object")
@@ -45,6 +48,7 @@ def validate(manifest_path: Path, project_root: Path, layer_spec: Path | None = 
         by_id[icon_id] = icon
         if icon["library"] not in ALLOWED_LIBRARIES:
             raise SystemExit(f"unsupported icon library: {icon['library']}")
+        libraries.add(str(icon["library"]))
         if not str(icon["source_url"]).startswith("https://") or not str(icon["license_url"]).startswith("https://"):
             raise SystemExit(f"icon URLs must use https: {icon_id}")
         if not str(icon["permission_basis"]).strip():
@@ -58,9 +62,15 @@ def validate(manifest_path: Path, project_root: Path, layer_spec: Path | None = 
             if not asset.is_file():
                 raise SystemExit(f"missing {key} for {icon_id}: {asset}")
 
+    if data.get("family_policy") == "single-library-per-screen-set" and len(libraries) != 1:
+        raise SystemExit(
+            "family_policy requires one approved icon library per screen set; "
+            f"found: {', '.join(sorted(libraries))}"
+        )
+
     if layer_spec:
         spec = load(layer_spec)
-        for layer in spec.get("layers", []):
+        for layer in iter_layers(spec.get("layers", [])):
             if layer.get("type") != "icon":
                 continue
             icon_data = layer.get("icon", {})

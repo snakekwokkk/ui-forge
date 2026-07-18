@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "figma_file_key": "",
   "selected_option": "",
   "asset_library": {
@@ -22,9 +22,17 @@
         "screen_key": "",
         "root_node_id": "",
         "root_layout_mode": "",
-        "structural_container_ids": [],
-        "auto_layout_container_ids": [],
-        "exceptions": []
+        "node_scan": [
+          {
+            "node_id": "",
+            "parent_node_id": "",
+            "node_kind": "FRAME",
+            "semantic_role": "section",
+            "layout_mode": "VERTICAL",
+            "layout_positioning": "AUTO",
+            "exception_reason": ""
+          }
+        ]
       }
     ]
   },

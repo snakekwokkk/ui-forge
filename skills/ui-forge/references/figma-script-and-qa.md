@@ -15,15 +15,16 @@ python scripts/generate_figma_script.py option-b-home.layers.json option-b-home.
   --project-root PROJECT_ROOT \
   --verify-lock option-b-home.png.lock.json \
   --asset-provenance asset-provenance.json \
+  --icon-manifest icon-manifest.json \
   --image-map figma-image-map.json \
   --page-id FIGMA_PAGE_ID
 ```
 
-The generator refuses stale locks, reference-only assets, missing image hashes, mismatched source paths, unsupported fills, and raster crops without an exact Figma transform. Fix the source specification instead of bypassing the refusal.
+The generator refuses schema-v1 flat specs, stale locks, reference-only assets, missing image hashes, mismatched source paths, unmanifested icons, unsupported fills, and raster crops without an exact Figma transform. Fix the source specification instead of bypassing the refusal.
 
 ## 3. Write to Figma
 
-Load the installed Figma-use prerequisite, then submit the generated JavaScript as the write body. Do not manually retype coordinates or substitute assets. The script creates one frame, editable native layers, text nodes, and image-filled asset nodes whose names retain stable layer IDs.
+Load the installed Figma-use prerequisite, then submit the generated JavaScript as the write body. Do not manually retype coordinates or substitute assets. The script creates a screen Auto Layout root plus nested semantic Auto Layout Frames. Flow children receive Figma layout sizing and no x/y assignment; only validated decorative overlays receive absolute coordinates.
 
 ## 4. Compare screenshots
 

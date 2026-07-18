@@ -18,7 +18,9 @@ Run these checks after the selected direction has been written to Figma and befo
 - Inventory every structural Frame: page sections, stacks, rows, cards, lists, action groups, headers, footers, and navigation.
 - Require every structural Frame to use Auto Layout.
 - Allow exceptions only for vectors, raster/image nodes, leaf shapes, masks, and documented decorative or absolute overlays whose children do not form a content structure.
-- Record root IDs, structural-container IDs, Auto Layout container IDs, and exception reasons from a live Figma scan.
+- Record every managed node in the schema-v2 `node_scan`, including node ID, parent ID, node kind, semantic role, layout mode, layout positioning, and any exception reason from a live Figma scan.
+- Reject structural nodes with `layoutMode: NONE` or `layoutPositioning: ABSOLUTE`.
+- Allow absolute positioning only for leaf vectors, rasters, shapes, or decorations with a non-empty exception reason.
 - Any missing root, undocumented structural exception, or structural set mismatch fails the gate.
 
 ## 3. Brand DNA variable binding

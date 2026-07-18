@@ -24,8 +24,8 @@ def main() -> None:
     report = load_json(report_path)
     errors: list[str] = []
 
-    if report.get("schema_version") != 1:
-        errors.append("schema_version must be 1")
+    if report.get("schema_version") != 2:
+        errors.append("schema_version must be 2")
 
     assets_gate = report.get("asset_library", {})
     manifest_rel = assets_gate.get("asset_manifest_path", "asset-manifest.json")
@@ -75,18 +75,42 @@ def main() -> None:
             errors.append(f"screen {key} lacks a root node ID")
         if screen.get("root_layout_mode") not in {"VERTICAL", "HORIZONTAL"}:
             errors.append(f"screen {key} root is not Auto Layout")
-        structural = screen.get("structural_container_ids", [])
-        automatic = screen.get("auto_layout_container_ids", [])
+        scan = screen.get("node_scan", [])
+        if not isinstance(scan, list) or not scan:
+            errors.append(f"screen {key} requires a non-empty live node_scan")
+            scan = []
+        scan_ids = [node.get("node_id", "") for node in scan]
+        if any(not nonempty(node_id) for node_id in scan_ids) or len(scan_ids) != len(set(scan_ids)):
+            errors.append(f"screen {key} node_scan IDs must be non-empty and unique")
+        structural = [
+            node.get("node_id", "")
+            for node in scan
+            if node.get("semantic_role") in {
+                "section", "stack", "row", "card", "list", "list-item",
+                "action-group", "navigation", "header", "footer", "content", "form",
+            }
+        ]
+        automatic = [
+            node.get("node_id", "")
+            for node in scan
+            if node.get("layout_mode") in {"VERTICAL", "HORIZONTAL"}
+        ]
         if len(structural) != len(set(structural)) or len(automatic) != len(set(automatic)):
             errors.append(f"screen {key} contains duplicate container IDs")
         missing = sorted(set(structural) - set(automatic))
         if missing:
             errors.append(f"screen {key} has structural containers without Auto Layout: {missing}")
-        for exception in screen.get("exceptions", []):
-            if exception.get("node_id") in set(structural):
-                errors.append(f"screen {key} illegally exempts structural node {exception.get('node_id')}")
-            if not nonempty(exception.get("reason")):
-                errors.append(f"screen {key} has an undocumented Auto Layout exception")
+        for node in scan:
+            node_id = node.get("node_id", "")
+            if node.get("layout_positioning", "AUTO") == "ABSOLUTE":
+                if node_id in set(structural):
+                    errors.append(f"screen {key} illegally absolutely positions structural node {node_id}")
+                if node.get("node_kind") not in {"VECTOR", "RASTER", "SHAPE", "DECORATION"}:
+                    errors.append(f"screen {key} absolute node {node_id} is not an allowed leaf visual")
+                if not nonempty(node.get("exception_reason")):
+                    errors.append(f"screen {key} absolute node {node_id} lacks an exception reason")
+            elif node.get("exception_reason"):
+                errors.append(f"screen {key} AUTO node {node_id} must not carry an exception reason")
 
     variables = report.get("brand_dna_variables", {})
     required_collections = {"primitives", "semantic", "dimensions", "typography"}

@@ -11,7 +11,7 @@ from pathlib import Path
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 
-from validate_layer_spec import validate
+from validate_layer_spec import iter_layers, validate
 from validate_asset_provenance import validate_provenance
 
 
@@ -165,6 +165,37 @@ def render_icon(layer: dict, width: int, height: int, project_root: Path) -> Ima
     return apply_opacity(layer_image, layer.get("opacity", 1))
 
 
+def render_layers(
+    canvas: Image.Image,
+    layers: list[dict],
+    project_root: Path,
+    parent_x: float = 0,
+    parent_y: float = 0,
+) -> None:
+    """Render nested layers; bounds are relative to their parent container."""
+    for layer in layers:
+        bounds = layer["bounds"]
+        width, height = round(bounds["width"]), round(bounds["height"])
+        if layer["type"] == "text":
+            layer_image = render_text(layer, width, height, project_root)
+        elif layer["type"] == "raster":
+            layer_image = render_raster(layer, width, height, project_root)
+        elif layer["type"] == "icon":
+            layer_image = render_icon(layer, width, height, project_root)
+        else:
+            layer_image = render_shape(layer, width, height)
+        rotation = layer.get("rotation", 0)
+        if rotation:
+            layer_image = layer_image.rotate(-rotation, expand=True, resample=Image.Resampling.BICUBIC)
+        left = parent_x + bounds["x"]
+        top = parent_y + bounds["y"]
+        center_x = left + bounds["width"] / 2
+        center_y = top + bounds["height"] / 2
+        canvas.alpha_composite(layer_image, (round(center_x - layer_image.width / 2), round(center_y - layer_image.height / 2)))
+        if layer["type"] == "frame":
+            render_layers(canvas, layer["children"], project_root, left, top)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("spec", type=Path)
@@ -179,7 +210,7 @@ def main() -> int:
     asset_paths = validate(spec_path, project_root)
     provenance_path = args.asset_provenance.resolve() if args.asset_provenance else None
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
-    has_raster = any(layer.get("type") == "raster" for layer in spec.get("layers", []))
+    has_raster = any(layer.get("type") == "raster" for layer in iter_layers(spec.get("layers", [])))
     if has_raster and provenance_path is None:
         raise SystemExit("--asset-provenance is required when the layer spec contains raster assets")
     if provenance_path:
@@ -187,23 +218,7 @@ def main() -> int:
     canvas_spec = spec["canvas"]
     canvas = fill_image(canvas_spec["background"], round(canvas_spec["width"]), round(canvas_spec["height"]), 1)
 
-    for layer in spec["layers"]:
-        bounds = layer["bounds"]
-        width, height = round(bounds["width"]), round(bounds["height"])
-        if layer["type"] == "text":
-            layer_image = render_text(layer, width, height, project_root)
-        elif layer["type"] == "raster":
-            layer_image = render_raster(layer, width, height, project_root)
-        elif layer["type"] == "icon":
-            layer_image = render_icon(layer, width, height, project_root)
-        else:
-            layer_image = render_shape(layer, width, height)
-        rotation = layer.get("rotation", 0)
-        if rotation:
-            layer_image = layer_image.rotate(-rotation, expand=True, resample=Image.Resampling.BICUBIC)
-        center_x = bounds["x"] + bounds["width"] / 2
-        center_y = bounds["y"] + bounds["height"] / 2
-        canvas.alpha_composite(layer_image, (round(center_x - layer_image.width / 2), round(center_y - layer_image.height / 2)))
+    render_layers(canvas, spec["layers"], project_root)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(args.output, "PNG")

@@ -7,6 +7,8 @@ import argparse
 import json
 from pathlib import Path
 
+from validate_layer_spec import iter_layers
+
 
 ALLOWED_USAGE = {"generated_original", "user_authorized_asset", "target_brand_owned_asset"}
 REJECTED_USAGE = {"reference_only", "competitor_reference", "website_scrape", "unconfirmed"}
@@ -41,7 +43,7 @@ def validate_provenance(spec_path: Path, provenance_path: Path) -> int:
         by_id[record["asset_id"]] = record
 
     used = 0
-    for layer in spec.get("layers", []):
+    for layer in iter_layers(spec.get("layers", [])):
         if layer.get("type") != "raster":
             continue
         used += 1

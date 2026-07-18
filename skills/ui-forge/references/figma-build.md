@@ -31,7 +31,7 @@ Use the installed Figma workflows and obey their prerequisites.
 ## Hard-gate evidence
 
 - Asset evidence must contain one unique Figma asset node and one labeled library-tile node for every accepted `asset-manifest.json` ID.
-- Auto Layout evidence must enumerate every managed screen root and every structural container. Do not classify a content container as decoration to bypass the gate.
+- Auto Layout evidence must use the schema-v2 live `node_scan` to enumerate every managed screen root, parent relationship, structural container, layout mode, and layout positioning. Do not classify a content container as decoration to bypass the gate.
 - Variable evidence must map every required Brand DNA token to a Figma variable and count all eligible and bound properties across managed screens. Require 100% coverage and zero unbound eligible properties.
 - Do not mark the build report as complete when `delivery-gates.json` is absent, stale, or failing.
 

@@ -1,71 +1,130 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "option": "A",
   "screen_id": "home",
   "canvas": {
     "width": 390,
     "height": 844,
-    "background": "#F8F7FA"
+    "background": "#F8F7FA",
+    "layout": {
+      "mode": "VERTICAL",
+      "primary_axis_sizing": "FIXED",
+      "counter_axis_sizing": "FIXED",
+      "primary_axis_align": "MIN",
+      "counter_axis_align": "MIN",
+      "item_spacing": 24,
+      "padding": {"top": 64, "right": 24, "bottom": 24, "left": 24},
+      "wrap": "NO_WRAP",
+      "clips_content": true
+    }
   },
   "layers": [
     {
-      "id": "home-background",
-      "name": "Home / Background",
-      "type": "rectangle",
-      "z_index": 0,
-      "bounds": {"x": 0, "y": 0, "width": 390, "height": 844},
-      "rotation": 0,
-      "opacity": 1,
-      "style": {"fill": "#F8F7FA", "corner_radius": 0}
-    },
-    {
-      "id": "hero-title",
-      "name": "Home / Hero / Title",
-      "type": "text",
+      "id": "hero-section",
+      "name": "Home / Hero",
+      "type": "frame",
+      "structural_role": "section",
       "z_index": 10,
-      "bounds": {"x": 24, "y": 72, "width": 342, "height": 48},
+      "bounds": {"x": 24, "y": 64, "width": 342, "height": 300},
+      "sizing": {"horizontal": "FILL", "vertical": "FIXED"},
+      "layout_positioning": "AUTO",
       "rotation": 0,
       "opacity": 1,
-      "text": {
-        "content": "Title",
-        "font_family": "Arial",
-        "font_style": "Bold",
-        "font_path": "",
-        "font_size": 32,
-        "line_height": 38,
-        "align": "left",
-        "color": "#17151E"
-      }
+      "style": {"fill": "#FFFFFF", "corner_radius": 24},
+      "layout": {
+        "mode": "VERTICAL",
+        "primary_axis_sizing": "FIXED",
+        "counter_axis_sizing": "FIXED",
+        "primary_axis_align": "MIN",
+        "counter_axis_align": "MIN",
+        "item_spacing": 16,
+        "padding": {"top": 24, "right": 24, "bottom": 24, "left": 24},
+        "wrap": "NO_WRAP",
+        "clips_content": true
+      },
+      "children": [
+        {
+          "id": "hero-title",
+          "name": "Home / Hero / Title",
+          "type": "text",
+          "z_index": 10,
+          "bounds": {"x": 24, "y": 24, "width": 294, "height": 48},
+          "sizing": {"horizontal": "FILL", "vertical": "FIXED"},
+          "layout_positioning": "AUTO",
+          "rotation": 0,
+          "opacity": 1,
+          "text": {
+            "content": "Title",
+            "font_family": "Arial",
+            "font_style": "Bold",
+            "font_path": "",
+            "font_size": 32,
+            "line_height": 38,
+            "align": "left",
+            "color": "#17151E"
+          }
+        },
+        {
+          "id": "hero-asset",
+          "name": "Home / Hero / Asset / 3D",
+          "type": "raster",
+          "z_index": 20,
+          "bounds": {"x": 91, "y": 88, "width": 160, "height": 160},
+          "sizing": {"horizontal": "FIXED", "vertical": "FIXED"},
+          "layout_positioning": "AUTO",
+          "rotation": 0,
+          "opacity": 1,
+          "raster": {
+            "asset_id": "asset-hero-01",
+            "path": "assets/isolated/hero-01.png",
+            "fit": "contain",
+            "crop": null
+          }
+        }
+      ]
     },
     {
-      "id": "hero-asset",
-      "name": "Home / Hero / Asset / 3D",
-      "type": "raster",
+      "id": "bottom-navigation",
+      "name": "Home / Bottom Navigation",
+      "type": "frame",
+      "structural_role": "navigation",
       "z_index": 20,
-      "bounds": {"x": 190, "y": 180, "width": 160, "height": 160},
+      "bounds": {"x": 24, "y": 388, "width": 342, "height": 72},
+      "sizing": {"horizontal": "FILL", "vertical": "FIXED"},
+      "layout_positioning": "AUTO",
       "rotation": 0,
       "opacity": 1,
-      "raster": {
-        "asset_id": "asset-hero-01",
-        "path": "assets/isolated/hero-01.png",
-        "fit": "contain",
-        "crop": null
-      }
-    },
-    {
-      "id": "tab-home-icon",
-      "name": "Home / Bottom Navigation / Home / Icon",
-      "type": "icon",
-      "z_index": 30,
-      "bounds": {"x": 32, "y": 780, "width": 24, "height": 24},
-      "rotation": 0,
-      "opacity": 1,
-      "icon": {
-        "icon_id": "tab-home-outline",
-        "svg_path": "assets/icons/iconpark/tab-home-outline.svg",
-        "preview_path": "assets/icons/iconpark/tab-home-outline.png",
-        "fit": "contain"
-      }
+      "style": {"fill": "#FFFFFF", "corner_radius": 24},
+      "layout": {
+        "mode": "HORIZONTAL",
+        "primary_axis_sizing": "FIXED",
+        "counter_axis_sizing": "FIXED",
+        "primary_axis_align": "SPACE_BETWEEN",
+        "counter_axis_align": "CENTER",
+        "item_spacing": 16,
+        "padding": {"top": 24, "right": 24, "bottom": 24, "left": 24},
+        "wrap": "NO_WRAP",
+        "clips_content": false
+      },
+      "children": [
+        {
+          "id": "tab-home-icon",
+          "name": "Home / Bottom Navigation / Home / Icon",
+          "type": "icon",
+          "z_index": 10,
+          "bounds": {"x": 24, "y": 24, "width": 24, "height": 24},
+          "sizing": {"horizontal": "FIXED", "vertical": "FIXED"},
+          "layout_positioning": "AUTO",
+          "rotation": 0,
+          "opacity": 1,
+          "icon": {
+            "icon_id": "tab-home-outline",
+            "svg_path": "assets/icons/phosphor/tab-home-regular.svg",
+            "preview_path": "assets/icons/phosphor/tab-home-regular.png",
+            "fit": "contain"
+          }
+        }
+      ]
     }
   ]
 }

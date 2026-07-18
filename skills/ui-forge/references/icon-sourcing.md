@@ -20,7 +20,7 @@ Use official vector icons for navigation, functional shortcuts, status, and acti
    - Preferred for domestic internet products and paired line/fill navigation states.
    - Official repository: https://github.com/Remix-Design/RemixIcon
 
-Use `Iconoir -> Phosphor -> Lucide` for general discovery. Override that order by need: use `Phosphor -> Remix Icon` for matched outline/fill states; use `Tabler -> Lucide` for broad B2B coverage. Do not use Iconly as a default source because its free catalog is not an open-source library. Preserve legacy IconPark or Iconly records only when revising an existing approved project; do not introduce new usage.
+Use `Iconoir -> Phosphor -> Lucide` for general discovery. Override that order by need: use `Phosphor -> Remix Icon` for matched outline/fill states; use `Tabler -> Lucide` for broad B2B coverage. Do not use Iconly or IconPark: they are outside this plugin's approved allowlist.
 
 ## On-demand retrieval
 
@@ -45,4 +45,4 @@ Use `Iconoir -> Phosphor -> Lucide` for general discovery. Override that order b
 
 For every icon, record stable ID, semantic role, screen, library, official name, variant, exact source URL, license and license URL, SVG path, preview derivative, size, state color, target layers, and permission basis in `icon-manifest.json`.
 
-The layer specification must reference the same `icon_id`, `svg_path`, and `preview_path`. Figma must import the locked SVG as an editable vector with a semantic name such as `Navigation / Home / Selected`. Run `scripts/validate_icon_manifest.py` before preview rendering and before Figma delivery.
+The layer specification must reference the same `icon_id`, `svg_path`, and `preview_path`. Figma must import the locked SVG as an editable vector with a semantic name such as `Navigation / Home / Selected`. Run `scripts/validate_icon_manifest.py` before preview rendering and pass `--icon-manifest` to `scripts/generate_figma_script.py`; icon-bearing Figma generation must fail closed when the manifest is missing or inconsistent.
