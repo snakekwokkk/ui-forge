@@ -5,7 +5,7 @@
 <h1 align="center">UIForge</h1>
 
 <p align="center">
-  将品牌参考、截图、线框图、素材、文案和 Figma 链接，转化为可编辑、可复用、可审查的移动端 UI。
+  将品牌参考、截图、线框图、素材、文案，转化为可编辑、可复用、可审查的移动端 UI。
 </p>
 
 <p align="center">
