@@ -27,6 +27,7 @@ Use the installed Figma workflows and obey their prerequisites.
 9. Capture a screenshot for QA.
 10. Populate `delivery-gates.json` from live Figma node IDs, layout modes, variable bindings, and asset placements.
 11. Run `python3 scripts/validate_delivery_gates.py delivery-gates.json`; stop and repair the Figma build unless it returns `pass`.
+12. Generate Visual Review with the bundled generator and run `python3 scripts/validate_visual_review.py visual-review/manifest.json`; stop and repair its source manifest or screenshots unless it returns `pass`. Never patch or replace the generated HTML.
 
 ## Hard-gate evidence
 

@@ -18,6 +18,8 @@ visual-review/
 
 Start from `assets/visual-review-manifest-template.json` when a manifest does not exist.
 
+Generate `index.html` only with the bundled `scripts/generate_visual_review.py`. Treat the HTML as disposable generated output: never hand-author, copy, restyle, or patch it. Make every intentional change through the manifest, screenshots, or bundled generator.
+
 ## Screen discovery
 
 Scan the selected direction's managed Figma page or Section. Include top-level mobile screen Frames; exclude Brand DNA, asset libraries, detached experiments, hidden backups, and reference screenshots unless the user explicitly requests them.
@@ -68,3 +70,16 @@ Ask one clarification when multiple sibling nodes are equally plausible or when 
 - Hide inactive screenshot elements instead of replacing or destroying them. Switching screens must never reveal annotation bubbles created on another screen.
 - Do not create editable DOM replicas, draggable UI, color controls, or text editors.
 - Do not embed reference-only images that were prohibited from Figma.
+
+## Hard validation
+
+After generation, run:
+
+```bash
+python3 scripts/validate_visual_review.py \
+  visual-review/manifest.json
+```
+
+The validator compares `index.html` byte-for-byte with the output the bundled generator should produce from the current manifest. It also requires every active screenshot to exist inside the Visual Review directory and match the manifest's natural width and height exactly.
+
+Any template modification, custom replacement, stale manifest, missing screen, missing screenshot, or non-natural screenshot size fails validation. Do not report completion, return the gallery, or advance the workflow unless validation prints `pass`. Repair source inputs and rerun the generator instead of editing `index.html`.

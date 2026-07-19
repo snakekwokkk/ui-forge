@@ -9,6 +9,9 @@ import json
 import re
 from pathlib import Path
 
+GENERATOR_ID = "ui-forge.visual-review"
+GENERATOR_VERSION = "1"
+
 
 def load_manifest(path: Path) -> dict:
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -57,6 +60,7 @@ def render(manifest: dict) -> str:
     first = active[0]
     return f'''<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="{GENERATOR_ID}@{GENERATOR_VERSION}">
 <title>UIForge Visual Review</title><style>
 :root{{--bg:#111116;--panel:#1c1c23;--line:#30303b;--text:#f7f7fb;--muted:#9b9baa;--violet:#7c3aed;--lime:#c3f80a}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,sans-serif;height:100vh;overflow:hidden}}
@@ -68,7 +72,7 @@ main{{display:grid;grid-template-rows:auto 1fr;min-width:0}}header{{display:flex
 .canvas{{overflow:auto;padding:32px;background:radial-gradient(circle at 50% 0,#242033 0,transparent 42%)}}.screen-view{{display:none;margin:0 auto;width:max-content;max-width:100%}}.screen-view.active{{display:block}}.shot{{max-width:min(100%,720px);height:auto;display:block;border-radius:18px;box-shadow:0 24px 80px #0008;background:white}}
 .help{{width:max-content;max-width:100%;margin:48px auto 0;background:#202027;border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:10px 14px;text-align:center}}
 </style></head><body>
-<div class="app"><aside><h1>Visual Review</h1><div class="summary">{len(active)} 个 Figma 页面</div><div id="screens">{''.join(buttons)}</div></aside>
+<div class="app" data-ui-forge-generator="{GENERATOR_VERSION}"><aside><h1>Visual Review</h1><div class="summary">{len(active)} 个 Figma 页面</div><div id="screens">{''.join(buttons)}</div></aside>
 <main><header><div><h2 id="title">{html.escape(first["name"])}</h2><p id="group">{html.escape(first.get("group", "Screens"))}</p></div><div class="node" id="node">Figma {html.escape(first["figma_node_id"])}</div></header>
 <div class="canvas">{''.join(views)}<div class="help">直接使用 Codex 标注功能圈选截图并留言；修改会同步回 Figma。</div></div></main></div>
 <script id="manifest" type="application/json">{encoded}</script><script>

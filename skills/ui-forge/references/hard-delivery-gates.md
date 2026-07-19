@@ -32,12 +32,22 @@ Run these checks after the selected direction has been written to Figma and befo
 - Record required token IDs, token-to-variable mappings, eligible property count, bound property count, and any unbound properties.
 - Require exact required-token coverage, zero unbound eligible properties, and `bound_property_count == eligible_property_count`.
 
+## 4. Visual Review integrity
+
+- Generate `visual-review/index.html` only with the bundled `scripts/generate_visual_review.py`.
+- Treat the HTML as generated output; never hand-author, copy, restyle, or patch it.
+- Require every current managed screen in the manifest and generated gallery.
+- Require each active screenshot file to match its manifest natural width and height exactly.
+- Run `scripts/validate_visual_review.py visual-review/manifest.json`.
+- Any generator mismatch, stale manifest, missing screen, missing screenshot, or size mismatch fails the gate.
+
 ## Evidence and validation
 
 Start from `assets/delivery-gates-template.json`. Then run:
 
 ```bash
 python3 scripts/validate_delivery_gates.py delivery-gates.json
+python3 scripts/validate_visual_review.py visual-review/manifest.json
 ```
 
-The validator must print `pass`. Otherwise remain in `BUILDING_FIGMA`, `VISUAL_QA`, or `REVISING`; do not report completion or move to the additional-option gate.
+Both validators must print `pass`. Otherwise remain in `BUILDING_FIGMA`, `VISUAL_QA`, `GENERATING_VISUAL_REVIEW`, or `REVISING`; do not report completion or move to the additional-option gate.
